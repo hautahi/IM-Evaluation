@@ -2,7 +2,7 @@
 
 Repository contains Python code used to generate the results in the paper entitled *A Numerical Evaluation of the Accuracy of Influence Maximization Algorithms* by Kingi, Wang, Shafer et al., which has the following abstract:
 
-    We develop an algorithm to compute exact solutions to the influence maximization problem using concepts from reverse influence sampling (RIS). We implement the algorithm in parallel using GPU resources to evaluate the empirical accuracy of theoretically-guaranteed greedy and RIS approximate solutions. We find that the approximation algorithms yield solutions that are remarkably close to optimal - usually achieving greater than 99% of the optimal influence spread. These results are consistent across a range of network structures.
+*We develop an algorithm to compute exact solutions to the influence maximization problem using concepts from reverse influence sampling (RIS). We implement the algorithm in parallel using GPU resources to evaluate the empirical accuracy of theoretically-guaranteed greedy and RIS approximate solutions. We find that the approximation algorithms yield solutions that are remarkably close to optimal - usually achieving greater than 99% of the optimal influence spread. These results are consistent across a range of network structures.*
 
 ## Python File Descriptions:
 
