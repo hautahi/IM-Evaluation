@@ -17,23 +17,23 @@ from collections import Counter
 # ---------------
 
 # Function creates a large number of RRR sets (to compile the "R" set)
-def get_rrs_gpu(graph, node_num, p, mc):  # Do we need node_num?
+def get_rrs_gpu(graph, node_num, p, theta):  # Do we need node_num?
     
-    # Randomly choose mc number of nodes with replacement from network
-    sources = np.random.choice(node_num, size=mc)
+    # Randomly choose theta number of nodes with replacement from network (theta is number of RRS sets as in paper)
+    sources = np.random.choice(node_num, size=theta)
 
     # Initiate a mc x n matrix to represent R
-    rrs = np.full((mc, node_num), False, dtype=bool)
+    rrs = np.full((theta, node_num), False, dtype=bool)
 
     # Creates mc random number generator states
-    rng_states = create_xoroshiro128p_states(mc,seed = np.random.randint(mc))
+    rng_states = create_xoroshiro128p_states(theta,seed = np.random.randint(theta))
         
     # Number of blocks (each with 128 threads) needed to perform mc operations
     threads_per_block = 128
-    blocks = math.ceil(mc / threads_per_block)
+    blocks = math.ceil(theta / threads_per_block)
 
     # Update the mc rows of the rrs array using GPU
-    get_node_flow_gpu[blocks, threads_per_block](graph, sources, p, rrs, mc, rng_states)
+    get_node_flow_gpu[blocks, threads_per_block](graph, sources, p, rrs, theta, rng_states)
 
     return(rrs)
 
@@ -55,13 +55,13 @@ Things to know:
 """
 
 @cuda.jit
-def get_node_flow_gpu(graph, sources, p, rrs, mc, rng_states):
+def get_node_flow_gpu(graph, sources, p, rrs, theta, rng_states):
     
     # Get abosolute position of current thread
     thread_id = cuda.grid(1)
     
-    # Because of block sizes, some of the threads will be greater than mc and not needed
-    if thread_id >= mc:
+    # Because of block sizes, some of the threads will be greater than theta and not needed
+    if thread_id >= theta:
         return
     
     # For the row in the matrix corresponding to this thread, mark the source node for the rrs set
